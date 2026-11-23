@@ -64,6 +64,20 @@ const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
+/* ---------- Botão flutuante do WhatsApp ---------- */
+// Esconde o botão enquanto o CTA do topo ou a chamada final estão visíveis,
+// para não duplicar o mesmo botão na tela.
+const waFloat = document.querySelector('.wa-float');
+const waTargets = document.querySelectorAll('.hero__actions, #contato');
+if (waFloat && waTargets.length && 'IntersectionObserver' in window) {
+  const visible = new Set();
+  const waIo = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+    waFloat.classList.toggle('is-hidden', visible.size > 0);
+  });
+  waTargets.forEach((el) => waIo.observe(el));
+}
+
 /* ---------- Animação de entrada ---------- */
 const items = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
